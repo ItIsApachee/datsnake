@@ -1,4 +1,6 @@
 {
   "setup-worktree": [
+    "cp .env $ROOT_WORKTREE_PATH/.env",
+    "ln -s .venv $ROOT_WORKTREE_PATH/.venv"
   ]
 }

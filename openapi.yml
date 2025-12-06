@@ -1,0 +1,447 @@
+openapi: 3.0.1
+info:
+  title: Snake3D API
+  description: Snake3D API
+  contact: {}
+  version: "1.0"
+servers:
+  - url: https://games.datsteam.dev
+    description: Production server
+paths:
+  /api/logs:
+    get:
+      tags:
+      - player
+      summary: Player logs
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/player.LogMessage'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gamesdk.PublicError'
+      security:
+      - ApiKeyAuth: []
+  /api/move:
+    post:
+      tags:
+      - player
+      summary: Player moves
+      requestBody:
+        description: list of snakes and their moves
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/command.Player'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dto.MoveResponse'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gamesdk.PublicError'
+      security:
+      - ApiKeyAuth: []
+      x-codegen-request-body-name: request
+  /api/rounds:
+    get:
+      tags:
+      - rounds
+      summary: game rounds
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swagger.RoundListResponse'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gamesdk.PublicError'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gamesdk.PublicError'
+      security:
+      - ApiKeyAuth: []
+  /stats:
+    get:
+      tags:
+      - rounds
+      summary: game stats
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/swagger.RealmStatsResponse'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gamesdk.PublicError'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/gamesdk.PublicError'
+      security:
+      - ApiKeyAuth: []
+components:
+  schemas:
+    command.Player:
+      type: object
+      properties:
+        snakes:
+          type: array
+          items:
+            $ref: '#/components/schemas/command.Snake'
+    command.Snake:
+      required:
+      - direction
+      - id
+      type: object
+      properties:
+        direction:
+          type: array
+          items:
+            type: integer
+        id:
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+    dto.MoveResponse:
+      type: object
+      properties:
+        enemies:
+          type: array
+          items:
+            $ref: '#/components/schemas/view.Enemy'
+        errors:
+          type: array
+          items:
+            type: string
+        fences:
+          type: array
+          items:
+            type: array
+            items:
+              type: integer
+        food:
+          type: array
+          items:
+            $ref: '#/components/schemas/view.Food'
+        mapSize:
+          type: array
+          example:
+          - 100
+          - 100
+          - 100
+          items:
+            type: integer
+        name:
+          type: string
+          example: player1
+        points:
+          type: integer
+          example: 100
+        reviveTimeoutSec:
+          type: integer
+          example: 2
+        snakes:
+          type: array
+          items:
+            $ref: '#/components/schemas/view.Snake'
+        specialFood:
+          $ref: '#/components/schemas/view.SpecialFood'
+        tickRemainMs:
+          type: integer
+          example: 100
+        turn:
+          type: integer
+          example: 3
+    gamesdk.PublicError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+    player.LogMessage:
+      type: object
+      properties:
+        message:
+          type: string
+        time:
+          type: string
+    swagger.Achieve:
+      type: object
+      properties:
+        counters:
+          type: object
+          additionalProperties:
+            type: number
+        createdAt:
+          type: string
+        name:
+          type: string
+        player:
+          type: string
+        realm:
+          type: string
+    swagger.PlayerStats:
+      type: object
+      properties:
+        attempt:
+          type: integer
+        counters:
+          type: object
+          additionalProperties:
+            type: number
+        endedAt:
+          type: string
+        player:
+          type: string
+        score:
+          type: number
+    swagger.RealmStats:
+      type: object
+      properties:
+        game:
+          type: string
+        players:
+          type: array
+          items:
+            $ref: '#/components/schemas/swagger.PlayerStats'
+        realm:
+          type: string
+        startedAt:
+          type: string
+    swagger.RealmStatsResponse:
+      type: object
+      properties:
+        achieves:
+          type: array
+          items:
+            $ref: '#/components/schemas/swagger.Achieve'
+        realms:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/swagger.RealmStats'
+        total:
+          $ref: '#/components/schemas/swagger.TotalStats'
+    swagger.RoundListResponse:
+      type: object
+      properties:
+        eventId:
+          type: string
+          example: "1"
+        now:
+          type: string
+          example: 2021-01-01T00:00:00Z
+        rounds:
+          type: array
+          items:
+            $ref: '#/components/schemas/swagger.RoundResponse'
+    swagger.RoundResponse:
+      type: object
+      properties:
+        duration:
+          type: integer
+          example: 60
+        endAt:
+          type: string
+          example: 2021-01-01T00:00:00Z
+        name:
+          type: string
+          example: Round 1
+        repeat:
+          type: integer
+          example: 1
+        startAt:
+          type: string
+          example: 2021-01-01T00:00:00Z
+        status:
+          type: string
+          example: active
+    swagger.TotalStats:
+      type: object
+      properties:
+        players:
+          type: array
+          items:
+            $ref: '#/components/schemas/swagger.PlayerStats'
+    view.Enemy:
+      type: object
+      properties:
+        geometry:
+          type: array
+          items:
+            type: array
+            items:
+              type: integer
+        kills:
+          type: integer
+          example: 10
+        status:
+          type: string
+          example: alive
+          enum:
+          - alive
+          - dead
+    view.Food:
+      type: object
+      properties:
+        c:
+          type: array
+          example:
+          - 1
+          - 1
+          - 1
+          items:
+            type: integer
+        points:
+          type: integer
+          example: 100
+        type:
+          type: integer
+    view.Global:
+      type: object
+      properties:
+        endsAt:
+          type: string
+        fences:
+          type: array
+          items:
+            $ref: '#/components/schemas/view.GlobalFence'
+        food:
+          type: array
+          items:
+            $ref: '#/components/schemas/view.Food'
+        mapSize:
+          type: array
+          example:
+          - 100
+          - 100
+          - 100
+          items:
+            type: integer
+        players:
+          type: array
+          items:
+            $ref: '#/components/schemas/view.GlobalPlayer'
+        realm:
+          type: string
+        startsAt:
+          type: string
+        turnNo:
+          type: integer
+    view.GlobalFence:
+      type: object
+      properties:
+        c:
+          type: array
+          example:
+          - 1
+          - 1
+          - 1
+          items:
+            type: integer
+        id:
+          type: string
+    view.GlobalPlayer:
+      type: object
+      properties:
+        name:
+          type: string
+          example: player1
+        points:
+          type: integer
+          example: 100
+        snakes:
+          type: array
+          items:
+            $ref: '#/components/schemas/view.Snake'
+    view.Snake:
+      type: object
+      properties:
+        deathCount:
+          type: integer
+          example: 0
+        direction:
+          type: array
+          example:
+          - 1
+          - 0
+          - 0
+          items:
+            type: integer
+        geometry:
+          type: array
+          items:
+            type: array
+            items:
+              type: integer
+        id:
+          type: string
+          example: 00000000-0000-0000-0000-000000000000
+        oldDirection:
+          type: array
+          example:
+          - 0
+          - 1
+          - 0
+          items:
+            type: integer
+        reviveRemainMs:
+          type: integer
+          example: 60
+        status:
+          type: string
+          example: alive
+          enum:
+          - alive
+          - dead
+    view.SpecialFood:
+      type: object
+      properties:
+        golden:
+          type: array
+          items:
+            type: array
+            items:
+              type: integer
+        suspicious:
+          type: array
+          items:
+            type: array
+            items:
+              type: integer
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      name: X-Auth-Token
+      in: header
+x-original-swagger-version: "2.0"
