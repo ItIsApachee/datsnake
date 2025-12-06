@@ -1,16 +1,19 @@
-#include "game.hpp"
+#include "game/game.hpp"
+
+#include <algorithm>
 #include <iostream>
+#include <memory>
 #include <thread>
+#include <utility>
 #include <vector>
+
 #include "models/commands.hpp"
 
 namespace game {
 
-GameManager::GameManager(std::unique_ptr<api::Client> client,
-                         std::unique_ptr<strategy::Strategy> strategy)
-    : client_(std::move(client)),
-      strategy_(std::move(strategy)),
-      running_(false) {}
+GameManager::GameManager(
+    std::unique_ptr<api::Client> client, std::unique_ptr<strategy::Strategy> strategy)
+    : client_(std::move(client)), strategy_(std::move(strategy)), running_(false) {}
 
 void GameManager::run() {
   running_ = true;

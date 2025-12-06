@@ -3,8 +3,10 @@
 
 #include <string>
 #include <vector>
-#include "types.hpp"
+
 #include <nlohmann/json.hpp>
+
+#include "models/types.hpp"
 
 struct Snake {
   std::string id;

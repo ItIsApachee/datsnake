@@ -1,11 +1,13 @@
 #ifndef API_CLIENT_HPP_
 #define API_CLIENT_HPP_
 
-#include <string>
 #include <optional>
-#include "models/game_state.hpp"
+#include <string>
+#include <utility>
+
+#include "api/endpoints.hpp"
 #include "models/commands.hpp"
-#include "endpoints.hpp"
+#include "models/game_state.hpp"
 
 namespace api {
 

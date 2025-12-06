@@ -1,8 +1,9 @@
 #ifndef MODELS_FOOD_HPP_
 #define MODELS_FOOD_HPP_
 
-#include "types.hpp"
 #include <nlohmann/json.hpp>
+
+#include "models/types.hpp"
 
 struct Food {
   Vec3 c;  // Coordinate

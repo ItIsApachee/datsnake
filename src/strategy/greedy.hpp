@@ -1,9 +1,10 @@
 #ifndef STRATEGY_GREEDY_HPP_
 #define STRATEGY_GREEDY_HPP_
 
-#include "strategy.hpp"
-#include <vector>
 #include <optional>
+#include <vector>
+
+#include "strategy/strategy.hpp"
 
 namespace strategy {
 

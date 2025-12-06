@@ -1,7 +1,9 @@
-#include "greedy.hpp"
+#include "strategy/greedy.hpp"
+
 #include <algorithm>
-#include <limits>
 #include <cmath>
+#include <limits>
+#include <vector>
 
 namespace strategy {
 

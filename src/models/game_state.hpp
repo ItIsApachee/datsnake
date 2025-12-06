@@ -3,10 +3,12 @@
 
 #include <string>
 #include <vector>
-#include "snake.hpp"
-#include "food.hpp"
-#include "types.hpp"
+
 #include <nlohmann/json.hpp>
+
+#include "models/food.hpp"
+#include "models/snake.hpp"
+#include "models/types.hpp"
 
 struct Enemy {
   std::string status;  // "alive" | "dead"

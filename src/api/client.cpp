@@ -1,8 +1,12 @@
-#include "client.hpp"
+#include "api/client.hpp"
+
 #include <cpr/cpr.h>
-#include <nlohmann/json.hpp>
+
 #include <iostream>
 #include <stdexcept>
+#include <string>
+
+#include <nlohmann/json.hpp>
 
 namespace api {
 
