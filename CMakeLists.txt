@@ -45,3 +45,24 @@ target_link_libraries(datsnake PRIVATE
   cpr::cpr
   nlohmann_json::nlohmann_json
 )
+
+# cpplint target
+find_program(CPPLINT cpplint
+  HINTS ${CMAKE_SOURCE_DIR}/.venv/bin
+)
+if(CPPLINT)
+  file(GLOB_RECURSE ALL_SOURCE_FILES
+    ${CMAKE_SOURCE_DIR}/src/*.cpp
+    ${CMAKE_SOURCE_DIR}/src/*.hpp
+  )
+
+  add_custom_target(cpplint
+    COMMAND ${CPPLINT} ${ALL_SOURCE_FILES}
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    COMMENT "Running cpplint..."
+  )
+
+  add_dependencies(datsnake cpplint)
+else()
+  message(WARNING "cpplint not found, skipping code style checks")
+endif()
